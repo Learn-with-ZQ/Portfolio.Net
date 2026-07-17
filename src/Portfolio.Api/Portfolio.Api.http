@@ -1,0 +1,62 @@
+@Portfolio.Api_HostAddress = http://localhost:5014
+@adminToken = {{adminLogin.response.body.data.accessToken}}
+@publicToken = {{publicLogin.response.body.data.accessToken}}
+
+### Admin login
+# @name adminLogin
+POST {{Portfolio.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "Admin@123"
+}
+
+### Public reader login
+# @name publicLogin
+POST {{Portfolio.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "userName": "public",
+  "password": "Public@123"
+}
+
+### Refresh token
+POST {{Portfolio.Api_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{adminLogin.response.body.data.refreshToken}}"
+}
+
+### Logout
+POST {{Portfolio.Api_HostAddress}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{adminLogin.response.body.data.refreshToken}}"
+}
+
+### Get experience (Admin or Public)
+GET {{Portfolio.Api_HostAddress}}/api/experience/1
+Authorization: Bearer {{adminToken}}
+Accept: application/json
+
+### Create experience (Admin only)
+POST {{Portfolio.Api_HostAddress}}/api/experience
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "portfolioProfileId": 1,
+  "designation": "Senior Developer",
+  "companyId": 1,
+  "startDate": "2020-01-01",
+  "sortOrder": 1
+}
+
+### Search projects (Public role)
+GET {{Portfolio.Api_HostAddress}}/api/projects/search?portfolioProfileId=1
+Authorization: Bearer {{publicToken}}
+Accept: application/json

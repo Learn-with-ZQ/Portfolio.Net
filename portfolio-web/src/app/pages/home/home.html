@@ -1,0 +1,104 @@
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-copy animate-up">
+      <p class="eyebrow"><span class="dot"></span> Available for opportunities</p>
+      <h1 class="hero-title">{{ site.owner }}</h1>
+      <p class="hero-role">
+        {{ site.role }} <span class="sep">·</span> <span class="accent">{{ site.company }}</span>
+      </p>
+      <p class="hero-assignment"><mat-icon>badge</mat-icon> {{ site.assignment }}</p>
+      <p class="hero-tagline">{{ site.tagline }}</p>
+
+      <div class="hero-actions">
+        <a mat-flat-button class="cta-primary" routerLink="/resume">
+          <mat-icon>download</mat-icon> Download Resume
+        </a>
+        <a mat-stroked-button routerLink="/resume"><mat-icon>visibility</mat-icon> View Resume</a>
+        <a mat-stroked-button routerLink="/contact"><mat-icon>mail</mat-icon> Contact Me</a>
+        <a mat-stroked-button class="cta-hire" routerLink="/recruiter"><mat-icon>handshake</mat-icon> Hire Me</a>
+      </div>
+
+      <div class="hero-social">
+        @for (s of site.socials; track s.label) {
+          <a [href]="s.url" target="_blank" rel="noopener" [attr.aria-label]="s.label" class="soc">
+            <mat-icon>{{ s.icon }}</mat-icon>
+          </a>
+        }
+      </div>
+    </div>
+
+    <div class="hero-photo animate-up delay-2">
+      <div class="photo-ring">
+        <img [src]="site.photo" [alt]="site.owner" width="300" height="300" />
+      </div>
+      <div class="photo-badge glass">
+        <mat-icon>school</mat-icon>
+        <span>{{ site.education.inProgress }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  @let s = state();
+
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading portfolio…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state">
+      <mat-icon>cloud_off</mat-icon>
+      <span>Couldn't reach the portfolio API.</span>
+      <small>{{ s.error }}</small>
+    </div>
+  } @else if (s.data) {
+    <div class="stats">
+      <div class="stat glass"><span class="stat-num">{{ s.data.experience.length }}</span><span class="stat-label">Roles</span></div>
+      <div class="stat glass"><span class="stat-num">{{ s.data.projects.length }}</span><span class="stat-label">Projects</span></div>
+      <div class="stat glass"><span class="stat-num">{{ s.data.skills.length }}</span><span class="stat-label">Skill Areas</span></div>
+      <div class="stat glass"><span class="stat-num">{{ s.data.certifications.length }}</span><span class="stat-label">Certifications</span></div>
+    </div>
+
+    @if (s.data.projects.length) {
+      <div class="feature">
+        <div class="feature-head">
+          <h2>Featured Projects</h2>
+          <a mat-button routerLink="/projects">All projects <mat-icon>arrow_forward</mat-icon></a>
+        </div>
+        <div class="grid grid-cards">
+          @for (proj of s.data.projects.slice(0, 3); track proj.projectId) {
+            <article class="mini-card">
+              <h3>{{ proj.projectName }}</h3>
+              <p class="muted">{{ proj.contextName || 'Personal' }}</p>
+              <div class="tags">
+                @for (tag of splitTags(proj.technologies).slice(0, 4); track tag) {
+                  <span class="tag">{{ tag }}</span>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    }
+  }
+</section>
+
+<section class="story">
+  <div class="story-inner">
+    <h2 class="story-title">Professional Journey</h2>
+    <div class="story-grid">
+      @for (block of site.story; track block.title) {
+        <article class="story-card glass">
+          <span class="story-icon"><mat-icon>{{ block.icon }}</mat-icon></span>
+          <h3>{{ block.title }}</h3>
+          <p>{{ block.body }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>

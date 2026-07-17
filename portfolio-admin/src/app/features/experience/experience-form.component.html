@@ -1,0 +1,66 @@
+@if (loading()) {
+  <div class="loading">
+    <mat-spinner diameter="40" />
+  </div>
+} @else {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEdit() ? 'Edit Experience' : 'New Experience' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Designation</mat-label>
+          <input matInput formControlName="designation" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Company</mat-label>
+          <mat-select formControlName="companyId">
+            <mat-option [value]="null">— None —</mat-option>
+            @for (company of companies(); track company.id) {
+              <mat-option [value]="company.id">{{ company.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Deploy Detail</mat-label>
+          <mat-select formControlName="deployDetailId">
+            <mat-option [value]="null">— None —</mat-option>
+            @for (deploy of deployDetails(); track deploy.id) {
+              <mat-option [value]="deploy.id">{{ deploy.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput type="date" formControlName="startDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput type="date" formControlName="endDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Sort Order</mat-label>
+          <input matInput type="number" formControlName="sortOrder" />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-flat-button color="primary" [disabled]="saving()" (click)="save()">
+        @if (saving()) {
+          Saving...
+        } @else {
+          Save
+        }
+      </button>
+    </mat-card-actions>
+  </mat-card>
+}

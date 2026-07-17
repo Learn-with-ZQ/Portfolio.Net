@@ -1,0 +1,64 @@
+<section class="page assistant">
+  <h1 class="page-title">Portfolio Assistant</h1>
+  <p class="page-subtitle">
+    Ask about {{ site.owner }}'s experience, projects, skills or education — answers come
+    straight from the live portfolio data.
+  </p>
+
+  <div class="chat glass" aria-live="polite">
+    @for (m of messages(); track $index) {
+      <div class="msg" [class.user]="m.from === 'user'">
+        @if (m.from === 'assistant') {
+          <span class="avatar"><mat-icon>smart_toy</mat-icon></span>
+        }
+        <div class="bubble">
+          <p>{{ m.text }}</p>
+          @if (m.reply?.items; as items) {
+            <ul class="results">
+              @for (item of items; track item.title) {
+                <li>
+                  @if (item.link) {
+                    <a [routerLink]="item.link">{{ item.title }}</a>
+                  } @else {
+                    <strong>{{ item.title }}</strong>
+                  }
+                  @if (item.subtitle) { <span class="sub">{{ item.subtitle }}</span> }
+                </li>
+              }
+            </ul>
+          }
+          @if (m.reply?.linkPath) {
+            <a class="more" [routerLink]="m.reply!.linkPath">
+              {{ m.reply!.linkLabel }} <mat-icon>arrow_forward</mat-icon>
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="chips">
+    @for (s of suggestions; track s) {
+      <button class="chip" type="button" (click)="ask(s)">{{ s }}</button>
+    }
+  </div>
+
+  <form class="composer glass" (submit)="$event.preventDefault(); ask()">
+    <input
+      type="text"
+      name="question"
+      placeholder="Ask about experience, projects, skills…"
+      [ngModel]="draft()"
+      (ngModelChange)="draft.set($event)"
+      aria-label="Ask the portfolio assistant a question"
+    />
+    <button mat-flat-button class="send" type="submit" [disabled]="!draft().trim()">
+      <mat-icon>send</mat-icon> Ask
+    </button>
+  </form>
+
+  <p class="note">
+    <mat-icon>info</mat-icon>
+    Answers are generated deterministically from portfolio data — nothing is invented.
+  </p>
+</section>

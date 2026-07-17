@@ -1,0 +1,115 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.search {
+  flex: 1 1 320px;
+}
+.sort {
+  flex: 0 0 200px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+}
+.chip:hover {
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+.chip.active {
+  background: var(--grad-brand);
+  color: #fff;
+  border-color: transparent;
+}
+
+.count {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  margin: 0 0 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: inherit;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(81, 43, 212, 0.3);
+}
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--c-primary);
+}
+.context {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.card h3 {
+  margin: 4px 0 0;
+  font-size: 1.15rem;
+}
+.range {
+  margin: 0;
+  color: var(--c-primary);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.tags {
+  margin-top: auto;
+  padding-top: 6px;
+}
+.tag {
+  background: rgba(81, 43, 212, 0.1);
+  color: var(--c-primary);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--c-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.more mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  transition: transform 0.2s var(--ease);
+}
+.card:hover .more mat-icon {
+  transform: translateX(4px);
+}

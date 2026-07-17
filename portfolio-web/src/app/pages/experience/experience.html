@@ -1,0 +1,60 @@
+<section class="page">
+  <h1 class="page-title">Experience</h1>
+  <p class="page-subtitle">An interactive timeline of roles, responsibilities and impact.</p>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data && s.data.length) {
+    <div class="summary">
+      <div class="sum glass">
+        <span class="sum-num">{{ s.data.length }}</span>
+        <span class="sum-label">{{ s.data.length === 1 ? 'Role' : 'Roles' }}</span>
+      </div>
+      <div class="sum glass">
+        <span class="sum-num">{{ currentCount(s.data) }}</span>
+        <span class="sum-label">Active now</span>
+      </div>
+    </div>
+
+    <ol class="timeline">
+      @for (exp of s.data; track exp.experienceId) {
+        <li class="tl-item">
+          <span class="tl-dot" [class.current]="exp.isCurrent"></span>
+          <div class="tl-card glass">
+            <div class="tl-head">
+              <div>
+                <h3>{{ exp.designation }}</h3>
+                <p class="company">{{ exp.companyName || 'Independent' }}</p>
+              </div>
+              @if (exp.isCurrent) { <span class="badge">Current</span> }
+            </div>
+
+            <p class="meta">
+              <span><mat-icon>calendar_today</mat-icon>{{ dateRange(exp.startDate, exp.endDate) }}</span>
+              <span><mat-icon>schedule</mat-icon>{{ durationBetween(exp.startDate, exp.endDate) }}</span>
+              @if (exp.deployedTo) {
+                <span><mat-icon>place</mat-icon>{{ exp.deployedTo }}</span>
+              }
+            </p>
+
+            @if (exp.details.length) {
+              <div class="resp">
+                <h4>Responsibilities &amp; achievements</h4>
+                <ul>
+                  @for (d of exp.details; track d.experienceDetailName) {
+                    <li>{{ d.experienceDetailName }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  } @else {
+    <div class="state"><mat-icon>work_off</mat-icon><span>No experience listed yet.</span></div>
+  }
+</section>

@@ -1,0 +1,182 @@
+<section class="page resume-page">
+  <div class="actions no-print">
+    <div class="actions-inner">
+      <button mat-stroked-button type="button" (click)="print()">
+        <mat-icon>print</mat-icon> Print
+      </button>
+      <button mat-flat-button color="primary" type="button" (click)="print()">
+        <mat-icon>picture_as_pdf</mat-icon> Save as PDF
+      </button>
+      <button mat-stroked-button type="button" [matMenuTriggerFor]="exportMenu">
+        <mat-icon>download</mat-icon> Export
+      </button>
+      <mat-menu #exportMenu="matMenu">
+        <button mat-menu-item type="button" (click)="exportTxt()">
+          <mat-icon>description</mat-icon><span>Plain text (.txt)</span>
+        </button>
+        <button mat-menu-item type="button" (click)="exportMarkdown()">
+          <mat-icon>notes</mat-icon><span>Markdown (.md)</span>
+        </button>
+      </mat-menu>
+      <a mat-stroked-button routerLink="/portfolio-pdf">
+        <mat-icon>menu_book</mat-icon> Full Portfolio PDF
+      </a>
+    </div>
+    <p class="hint">
+      ATS-friendly single-column layout. For a text-based PDF, choose “Save as PDF” in the
+      print dialog rather than a screenshot.
+    </p>
+  </div>
+
+  @let s = resume();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Building resume…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data) {
+    <article class="sheet" id="resume-sheet">
+      <header class="sheet-head">
+        <h1>{{ site.owner }}</h1>
+        <p class="role">{{ site.role }}</p>
+        <p class="contact">
+          <span>{{ site.location }}</span>
+          <span>{{ site.email }}</span>
+          @for (link of site.socials; track link.label) {
+            <span>{{ link.url }}</span>
+          }
+        </p>
+      </header>
+
+      @if (site.about.intro) {
+        <section class="block">
+          <h2>Summary</h2>
+          <p>{{ site.about.intro }}</p>
+        </section>
+      }
+
+      @if (s.data.skills.length) {
+        <section class="block">
+          <h2>Skills</h2>
+          <ul class="skills">
+            @for (skill of s.data.skills; track skill.skillId) {
+              <li>
+                <strong>{{ skill.skillName }}</strong>@if (skillItems(skill); as items) {<span>: {{ items }}</span>}
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.experience.length) {
+        <section class="block">
+          <h2>Experience</h2>
+          @for (exp of s.data.experience; track exp.experienceId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">
+                  {{ exp.designation }}@if (exp.companyName) {<span> — {{ exp.companyName }}</span>}
+                </span>
+                <span class="entry-date">{{ dateRange(exp.startDate, exp.endDate) }}</span>
+              </div>
+              @if (exp.details.length) {
+                <ul class="bullets">
+                  @for (d of exp.details; track d.experienceDetailName) {
+                    <li>{{ d.experienceDetailName }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.projects.length) {
+        <section class="block">
+          <h2>Projects</h2>
+          @for (proj of s.data.projects; track proj.projectId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">
+                  {{ proj.projectName }}@if (proj.contextName) {<span> — {{ proj.contextName }}</span>}
+                </span>
+                <span class="entry-date">{{ dateRange(proj.startDate, proj.endDate) }}</span>
+              </div>
+              @if (proj.technologies) {
+                <p class="tech"><strong>Technologies:</strong> {{ proj.technologies }}</p>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.education.length) {
+        <section class="block">
+          <h2>Education</h2>
+          @for (edu of s.data.education; track edu.educationId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">{{ edu.degree }} — {{ edu.instituteName }}</span>
+                <span class="entry-date">{{ dateRange(edu.startDate, edu.endDate) }}</span>
+              </div>
+              @if (edu.cgpa != null || edu.gpa != null) {
+                <p class="tech">{{ edu.cgpa != null ? 'CGPA' : 'GPA' }}: {{ edu.cgpa ?? edu.gpa }}</p>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.certifications.length) {
+        <section class="block">
+          <h2>Certifications</h2>
+          <ul class="bullets">
+            @for (cert of s.data.certifications; track cert.certificationId) {
+              <li>
+                {{ cert.certificationName }} — {{ cert.issuerName }}
+                (Issued {{ monthYear(cert.issueDate) }}@if (!cert.doesNotExpire && cert.expiryDate) {<span>, expires {{ monthYear(cert.expiryDate) }}</span>})
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.awards.length) {
+        <section class="block">
+          <h2>Awards</h2>
+          <ul class="bullets">
+            @for (award of s.data.awards; track award.awardId) {
+              <li>{{ award.awardName }} ({{ dateRange(award.startDate, award.endDate) }})</li>
+            }
+          </ul>
+        </section>
+      }
+    </article>
+  }
+
+  @let d = documents();
+  @if (d.status === 'success' && d.data && d.data.length) {
+    <section class="downloads no-print">
+      <h2>Attached documents</h2>
+      <div class="doc-list">
+        @for (doc of d.data; track doc.documentId) {
+          <div class="doc">
+            <span class="doc-icon"><mat-icon>description</mat-icon></span>
+            <div class="doc-body">
+              <div class="doc-title">{{ doc.documentTitle }} <span class="type">{{ doc.documentType }}</span></div>
+              <div class="doc-meta">{{ doc.fileName }} · {{ formatBytes(doc.fileSizeBytes) }} · v{{ doc.versionNumber }}</div>
+            </div>
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="busyId() === doc.documentId"
+              (click)="download(doc)"
+            >
+              @if (busyId() === doc.documentId) { <mat-spinner diameter="18" /> } @else { <mat-icon>download</mat-icon> }
+              Download
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+</section>

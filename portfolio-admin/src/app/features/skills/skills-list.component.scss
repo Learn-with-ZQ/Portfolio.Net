@@ -1,0 +1,30 @@
+.toolbar {
+  margin-bottom: 1rem;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 320px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.error {
+  color: #c62828;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+mat-paginator {
+  margin-top: 0.5rem;
+}

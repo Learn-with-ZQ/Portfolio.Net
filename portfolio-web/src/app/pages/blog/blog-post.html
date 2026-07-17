@@ -1,0 +1,30 @@
+<section class="page">
+  <a class="back" routerLink="/blog"><mat-icon>arrow_back</mat-icon> All posts</a>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data) {
+    <article class="post">
+      @if (s.data.category) { <span class="cat">{{ s.data.category }}</span> }
+      <h1>{{ s.data.title }}</h1>
+      <p class="meta">
+        @if (s.data.publishedAt) { <span>{{ monthYear(s.data.publishedAt) }}</span> }
+        @if (s.data.readTimeMinutes) { <span>· {{ s.data.readTimeMinutes }} min read</span> }
+      </p>
+      @if (s.data.summary) { <p class="lead">{{ s.data.summary }}</p> }
+
+      <div class="content" [innerHTML]="html()"></div>
+
+      @if (s.data.tags) {
+        <div class="tags">
+          @for (t of splitTags(s.data.tags); track t) { <span class="tag">{{ t }}</span> }
+        </div>
+      }
+    </article>
+  } @else {
+    <div class="state"><mat-icon>article</mat-icon><span>Post not found.</span></div>
+  }
+</section>

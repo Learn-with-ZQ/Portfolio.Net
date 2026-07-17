@@ -1,0 +1,62 @@
+<section class="page">
+  <h1 class="page-title">Document Center</h1>
+  <p class="page-subtitle">
+    Verified documents and credentials. Some are view-only by design.
+    <a routerLink="/downloads" class="inline-link">Go to downloads →</a>
+  </p>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading documents…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (groups().length) {
+    @for (group of groups(); track group.type) {
+      <div class="group">
+        <h2 class="group-title">{{ group.type }} <span class="count">{{ group.items.length }}</span></h2>
+        <div class="doc-list">
+          @for (doc of group.items; track doc.documentId) {
+            <article class="doc">
+              <div class="doc-row">
+                <span class="doc-icon"><mat-icon>description</mat-icon></span>
+                <div class="doc-body">
+                  <h3>{{ doc.documentTitle }}</h3>
+                  <p class="meta">
+                    {{ doc.fileName }} · {{ formatBytes(doc.fileSizeBytes) }} · v{{ doc.versionNumber }}
+                    · {{ monthYear(doc.createdAt) }}
+                    @if (!doc.isDownloadable) { <span class="lock"><mat-icon>lock</mat-icon> view-only</span> }
+                  </p>
+                </div>
+                <div class="actions">
+                  @if (access.isPreviewable(doc) && access.url(doc)) {
+                    <button mat-stroked-button type="button" (click)="togglePreview(doc)">
+                      <mat-icon>{{ previewId() === doc.documentId ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      Preview
+                    </button>
+                  }
+                  <button mat-stroked-button type="button" [disabled]="!access.url(doc)" (click)="open(doc)">
+                    <mat-icon>open_in_new</mat-icon> View
+                  </button>
+                  @if (doc.isDownloadable && access.url(doc)) {
+                    <a mat-flat-button class="dl" [href]="access.url(doc)" [attr.download]="doc.fileName"
+                       target="_blank" rel="noopener">
+                      <mat-icon>download</mat-icon> Download
+                    </a>
+                  }
+                </div>
+              </div>
+
+              @if (previewId() === doc.documentId && access.safeUrl(doc); as safe) {
+                <div class="preview">
+                  <iframe [src]="safe" [title]="doc.documentTitle" loading="lazy"></iframe>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="state"><mat-icon>folder_off</mat-icon><span>No public documents available.</span></div>
+  }
+</section>

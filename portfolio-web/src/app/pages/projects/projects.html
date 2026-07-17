@@ -1,0 +1,63 @@
+<section class="page">
+  <h1 class="page-title">Projects</h1>
+  <p class="page-subtitle">Selected work — search, filter and explore each project.</p>
+
+  <div class="toolbar">
+    <mat-form-field appearance="outline" class="search">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Search projects or technologies</mat-label>
+      <input matInput [ngModel]="search()" (ngModelChange)="search.set($event)" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="sort">
+      <mat-label>Sort</mat-label>
+      <mat-select [ngModel]="sort()" (ngModelChange)="sort.set($event)">
+        <mat-option value="newest">Newest first</mat-option>
+        <mat-option value="oldest">Oldest first</mat-option>
+        <mat-option value="name">Name (A–Z)</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (contexts().length) {
+    <div class="chips">
+      <button class="chip" [class.active]="context() === 'all'" (click)="setContext('all')">All</button>
+      @for (c of contexts(); track c) {
+        <button class="chip" [class.active]="context() === c" (click)="setContext(c)">{{ c }}</button>
+      }
+    </div>
+  }
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (!s.data || !s.data.length) {
+    <div class="state"><mat-icon>folder_off</mat-icon><span>No projects listed yet.</span></div>
+  } @else {
+    @if (!visible().length) {
+      <div class="state"><mat-icon>search_off</mat-icon><span>No projects match your filters.</span></div>
+    } @else {
+      <p class="count">{{ visible().length }} of {{ s.data.length }} projects</p>
+      <div class="grid grid-cards">
+        @for (proj of visible(); track proj.projectId) {
+          <a class="card" [routerLink]="['/projects', proj.projectId]">
+            <div class="card-top">
+              <mat-icon>folder</mat-icon>
+              @if (proj.contextName) { <span class="context">{{ proj.contextName }}</span> }
+            </div>
+            <h3>{{ proj.projectName }}</h3>
+            <p class="range">{{ dateRange(proj.startDate, proj.endDate) }}</p>
+            <div class="tags">
+              @for (tag of splitTags(proj.technologies); track tag) {
+                <span class="tag">{{ tag }}</span>
+              }
+            </div>
+            <span class="more">View details <mat-icon>arrow_forward</mat-icon></span>
+          </a>
+        }
+      </div>
+    }
+  }
+</section>

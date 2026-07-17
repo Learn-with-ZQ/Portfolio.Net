@@ -1,0 +1,146 @@
+.assistant {
+  max-width: 860px;
+}
+
+.chat {
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 260px;
+  margin-bottom: 16px;
+}
+
+.msg {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.msg.user {
+  justify-content: flex-end;
+}
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--grad-brand);
+  color: #fff;
+}
+.avatar mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.bubble {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  max-width: 640px;
+}
+.msg.user .bubble {
+  background: var(--grad-brand);
+  color: #fff;
+  border: none;
+}
+.bubble p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.results {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+.results li {
+  display: flex;
+  flex-direction: column;
+}
+.results a {
+  color: var(--c-secondary);
+  font-weight: 600;
+}
+.results .sub {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  color: var(--c-primary);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.more mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+}
+.chip:hover {
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+  border-radius: var(--radius);
+  padding: 10px;
+}
+.composer input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 10px 12px;
+  outline: none;
+  color: var(--ink);
+}
+.send {
+  background: var(--grad-brand) !important;
+  color: #fff !important;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  margin: 14px 0 0;
+}
+.note mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}

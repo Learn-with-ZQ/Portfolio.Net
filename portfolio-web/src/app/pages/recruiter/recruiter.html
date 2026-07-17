@@ -1,0 +1,67 @@
+<section class="rec-hero">
+  <div class="rec-hero-inner">
+    <p class="eyebrow animate-up"><mat-icon>badge</mat-icon> For Recruiters &amp; Hiring Teams</p>
+    <h1 class="animate-up delay-1">{{ recruiter.headline }}</h1>
+    <p class="lead animate-up delay-2">{{ recruiter.summary }}</p>
+
+    <div class="rec-actions animate-up delay-3">
+      <a mat-flat-button class="cta-primary" routerLink="/resume"><mat-icon>download</mat-icon> Download Resume</a>
+      <a mat-stroked-button routerLink="/contact"><mat-icon>mail</mat-icon> Contact Me</a>
+      <a mat-stroked-button routerLink="/experience"><mat-icon>timeline</mat-icon> View Experience</a>
+    </div>
+
+    <div class="metrics animate-up delay-4">
+      @for (m of recruiter.metrics; track m.label) {
+        <div class="metric glass">
+          <span class="metric-value">{{ m.value }}</span>
+          <span class="metric-label">{{ m.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="section-title">What I bring to your team</h2>
+  <div class="grid strengths">
+    @for (s of recruiter.strengths; track s.title) {
+      <article class="strength glass">
+        <span class="strength-icon"><mat-icon>{{ s.icon }}</mat-icon></span>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.body }}</p>
+      </article>
+    }
+  </div>
+
+  <h2 class="section-title">Where I've delivered</h2>
+  @let e = experience();
+  @if (e.status === 'loading') {
+    <div class="state"><mat-spinner diameter="40" /><span>Loading experience…</span></div>
+  } @else if (e.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ e.error }}</span></div>
+  } @else if (!e.data?.length) {
+    <div class="state"><mat-icon>work_off</mat-icon><span>Experience coming soon.</span></div>
+  } @else {
+    <div class="grid companies">
+      @for (exp of e.data; track exp.experienceId) {
+        <article class="company">
+          <div class="company-top">
+            <span class="company-mark">{{ (exp.companyName || exp.designation).charAt(0) }}</span>
+            @if (exp.isCurrent) { <span class="pill">Current</span> }
+          </div>
+          <h3>{{ exp.designation }}</h3>
+          <p class="company-name">{{ exp.companyName || 'Independent' }}</p>
+          <p class="company-date">{{ dateRange(exp.startDate, exp.endDate) }}</p>
+        </article>
+      }
+    </div>
+  }
+
+  <div class="rec-cta glass">
+    <div>
+      <h3>Looking for a reliable backend engineer?</h3>
+      <p>I'm open to roles where clean architecture and production reliability matter.</p>
+    </div>
+    <a mat-flat-button class="cta-primary" routerLink="/contact"><mat-icon>handshake</mat-icon> Hire Me</a>
+  </div>
+</section>

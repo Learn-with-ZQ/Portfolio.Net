@@ -1,0 +1,176 @@
+.book-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.actions {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.actions .page-subtitle {
+  margin-bottom: 0;
+}
+.cta {
+  background: var(--grad-brand) !important;
+  color: #fff !important;
+  flex: none;
+}
+
+.book {
+  width: 100%;
+  max-width: 860px;
+  background: #fff;
+  color: #14181d;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+  padding: 52px 56px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.cover {
+  text-align: center;
+  border-bottom: 3px solid #14181d;
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+}
+.cover-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #512bd4;
+  margin: 0 0 10px;
+}
+.cover h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.cover-role {
+  font-weight: 600;
+  color: #33414f;
+  margin: 0 0 4px;
+}
+.cover-contact {
+  color: #4a5560;
+  font-size: 0.88rem;
+  margin: 0 0 18px;
+}
+.cover-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  color: #33414f;
+  font-size: 0.85rem;
+}
+.cover-stats strong {
+  color: #512bd4;
+}
+
+.blk {
+  margin-bottom: 26px;
+}
+.blk h2 {
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #d7dde3;
+  padding-bottom: 5px;
+  margin: 0 0 12px;
+}
+.blk p {
+  margin: 0 0 10px;
+}
+.blk ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.blk li {
+  margin-bottom: 5px;
+}
+
+.entry {
+  margin-bottom: 14px;
+}
+.entry:last-child {
+  margin-bottom: 0;
+}
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.entry-title {
+  font-weight: 700;
+}
+.entry-date {
+  flex: none;
+  font-size: 0.84rem;
+  color: #4a5560;
+  white-space: nowrap;
+}
+.entry ul {
+  margin-top: 6px;
+}
+.sub {
+  color: #33414f;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+.quote p:first-child {
+  font-style: italic;
+}
+
+.book-foot {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #d7dde3;
+  text-align: center;
+  color: #4a5560;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 620px) {
+  .book {
+    padding: 30px 24px;
+  }
+  .entry-head {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+/* Print: only the book, styled as a document ------------------------------ */
+@media print {
+  .book-page {
+    padding: 0;
+  }
+  .book {
+    max-width: none;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    font-size: 10.5pt;
+    color: #000;
+  }
+  .cover,
+  .blk h2 {
+    border-color: #000;
+  }
+  .blk {
+    break-inside: avoid-page;
+  }
+}

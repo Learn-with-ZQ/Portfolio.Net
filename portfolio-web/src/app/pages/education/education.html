@@ -1,0 +1,51 @@
+<section class="page">
+  <h1 class="page-title">Education</h1>
+  <p class="page-subtitle">Academic background, degrees and coursework.</p>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data && s.data.length) {
+    <ol class="timeline">
+      @for (edu of s.data; track edu.educationId) {
+        <li class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-card glass">
+            <div class="tl-head">
+              <div>
+                <h3>{{ degreeLabel(edu) }}</h3>
+                <p class="inst">
+                  <mat-icon>account_balance</mat-icon>{{ edu.instituteName }}
+                  @if (edu.location) { <span class="loc">· {{ edu.location }}</span> }
+                </p>
+              </div>
+              @if (edu.cgpa != null || edu.gpa != null) {
+                <div class="gpa">
+                  <span class="gpa-num">{{ edu.cgpa ?? edu.gpa }}</span>
+                  <span class="gpa-label">{{ edu.cgpa != null ? 'CGPA' : 'GPA' }}</span>
+                </div>
+              }
+            </div>
+
+            <p class="range"><mat-icon>calendar_today</mat-icon>{{ dateRange(edu.startDate, edu.endDate) }}</p>
+
+            @if (edu.courses.length) {
+              <div class="courses">
+                <h4>Key courses</h4>
+                <div class="tags">
+                  @for (c of edu.courses; track c.courseName) {
+                    <span class="tag">{{ c.courseName }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  } @else {
+    <div class="state"><mat-icon>school</mat-icon><span>No education listed yet.</span></div>
+  }
+</section>

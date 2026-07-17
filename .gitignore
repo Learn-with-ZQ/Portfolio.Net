@@ -1,0 +1,28 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+publish/
+*.binlog
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# Environment & secrets
+appsettings.Development.json
+*.env
+.env.*
+
+# Test results
+TestResults/
+coverage/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

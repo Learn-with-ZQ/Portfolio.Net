@@ -1,0 +1,41 @@
+<section class="page">
+  <h1 class="page-title">Blog</h1>
+  <p class="page-subtitle">Notes on .NET, Angular, SQL Server, system design and data science.</p>
+
+  @if (categories().length) {
+    <div class="chips">
+      <button class="chip" [class.active]="category() === 'all'" (click)="category.set('all')">All</button>
+      @for (c of categories(); track c) {
+        <button class="chip" [class.active]="category() === c" (click)="category.set(c)">{{ c }}</button>
+      }
+    </div>
+  }
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (visible().length) {
+    <div class="grid grid-cards">
+      @for (post of visible(); track post.blogPostId) {
+        <a class="card" [routerLink]="['/blog', post.slug]">
+          @if (post.category) { <span class="cat">{{ post.category }}</span> }
+          <h3>{{ post.title }}</h3>
+          @if (post.summary) { <p class="sum">{{ post.summary }}</p> }
+          <div class="meta">
+            @if (post.publishedAt) { <span>{{ monthYear(post.publishedAt) }}</span> }
+            @if (post.readTimeMinutes) { <span>· {{ post.readTimeMinutes }} min read</span> }
+          </div>
+          @if (post.tags) {
+            <div class="tags">
+              @for (t of splitTags(post.tags); track t) { <span class="tag">{{ t }}</span> }
+            </div>
+          }
+        </a>
+      }
+    </div>
+  } @else {
+    <div class="state"><mat-icon>article</mat-icon><span>No posts published yet.</span></div>
+  }
+</section>

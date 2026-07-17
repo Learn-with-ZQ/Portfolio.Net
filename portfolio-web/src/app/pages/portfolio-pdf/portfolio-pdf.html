@@ -1,0 +1,167 @@
+<section class="page book-page">
+  <div class="actions no-print">
+    <div>
+      <h1 class="page-title">Portfolio PDF</h1>
+      <p class="page-subtitle">The complete professional portfolio as a single printable document.</p>
+    </div>
+    <button mat-flat-button class="cta" type="button" (click)="print()">
+      <mat-icon>picture_as_pdf</mat-icon> Save as PDF
+    </button>
+  </div>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Assembling portfolio…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data) {
+    <article class="book" id="portfolio-book">
+
+      <header class="cover">
+        <p class="cover-eyebrow">Professional Portfolio</p>
+        <h1>{{ site.owner }}</h1>
+        <p class="cover-role">{{ site.role }} · {{ site.company }} — {{ site.assignment }}</p>
+        <p class="cover-contact">{{ site.location }} · {{ site.email }}</p>
+        <div class="cover-stats">
+          @for (sec of sections(s.data); track sec.label) {
+            @if (sec.count) {
+              <span><strong>{{ sec.count }}</strong> {{ sec.label }}</span>
+            }
+          }
+        </div>
+      </header>
+
+      <section class="blk">
+        <h2>Professional Summary</h2>
+        <p>{{ site.about.intro }}</p>
+        @for (p of site.about.paragraphs; track $index) { <p>{{ p }}</p> }
+      </section>
+
+      @if (s.data.resume.experience.length) {
+        <section class="blk">
+          <h2>Experience</h2>
+          @for (e of s.data.resume.experience; track e.experienceId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">{{ e.designation }}@if (e.companyName) {<span> — {{ e.companyName }}</span>}</span>
+                <span class="entry-date">{{ dateRange(e.startDate, e.endDate) }}</span>
+              </div>
+              @if (e.details.length) {
+                <ul>
+                  @for (d of e.details; track d.experienceDetailName) { <li>{{ d.experienceDetailName }}</li> }
+                </ul>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.resume.projects.length) {
+        <section class="blk">
+          <h2>Projects</h2>
+          @for (p of s.data.resume.projects; track p.projectId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">{{ p.projectName }}@if (p.contextName) {<span> — {{ p.contextName }}</span>}</span>
+                <span class="entry-date">{{ dateRange(p.startDate, p.endDate) }}</span>
+              </div>
+              @if (p.technologies) { <p class="sub"><strong>Technologies:</strong> {{ p.technologies }}</p> }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.resume.skills.length) {
+        <section class="blk">
+          <h2>Skills</h2>
+          <ul>
+            @for (sk of s.data.resume.skills; track sk.skillId) {
+              <li><strong>{{ sk.skillName }}</strong>@if (skillLine(sk)) {<span>: {{ skillLine(sk) }}</span>}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.resume.education.length) {
+        <section class="blk">
+          <h2>Education</h2>
+          @for (ed of s.data.resume.education; track ed.educationId) {
+            <div class="entry">
+              <div class="entry-head">
+                <span class="entry-title">{{ ed.degree }} — {{ ed.instituteName }}</span>
+                <span class="entry-date">{{ dateRange(ed.startDate, ed.endDate) }}</span>
+              </div>
+              @if (ed.cgpa != null || ed.gpa != null) {
+                <p class="sub">{{ ed.cgpa != null ? 'CGPA' : 'GPA' }}: {{ ed.cgpa ?? ed.gpa }}</p>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.resume.certifications.length) {
+        <section class="blk">
+          <h2>Certifications</h2>
+          <ul>
+            @for (c of s.data.resume.certifications; track c.certificationId) {
+              <li>{{ c.certificationName }} — {{ c.issuerName }} (Issued {{ monthYear(c.issueDate) }})</li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.resume.awards.length) {
+        <section class="blk">
+          <h2>Awards &amp; Recognition</h2>
+          <ul>
+            @for (a of s.data.resume.awards; track a.awardId) {
+              <li>{{ a.awardName }} ({{ dateRange(a.startDate, a.endDate) }})</li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.testimonials.length) {
+        <section class="blk">
+          <h2>Testimonials</h2>
+          @for (t of s.data.testimonials; track t.testimonialId) {
+            <div class="entry quote">
+              <p>“{{ t.content }}”</p>
+              <p class="sub">— {{ t.authorName }}{{ t.authorTitle ? ', ' + t.authorTitle : '' }}{{ t.authorCompany ? ' (' + t.authorCompany + ')' : '' }}</p>
+            </div>
+          }
+        </section>
+      }
+
+      @if (s.data.references.length) {
+        <section class="blk">
+          <h2>References</h2>
+          <ul>
+            @for (r of s.data.references; track r.referenceId) {
+              <li>
+                <strong>{{ r.fullName }}</strong> — {{ r.designation }}{{ r.organization ? ', ' + r.organization : '' }}
+                {{ r.isContactVisible && r.email ? ' · ' + r.email : ' · Contact available on request' }}
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (s.data.documents.length) {
+        <section class="blk">
+          <h2>Supporting Documents</h2>
+          <ul>
+            @for (doc of s.data.documents; track doc.documentId) {
+              <li>{{ doc.documentTitle }} ({{ doc.documentType }})</li>
+            }
+          </ul>
+          <p class="sub">Available in the online document center.</p>
+        </section>
+      }
+
+      <footer class="book-foot">
+        Generated from the live portfolio · {{ site.email }}
+      </footer>
+    </article>
+  }
+</section>

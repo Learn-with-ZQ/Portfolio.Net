@@ -1,0 +1,88 @@
+<section class="page">
+  <h1 class="page-title">Testimonials</h1>
+  <p class="page-subtitle">What managers, colleagues, mentors and clients say.</p>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data && s.data.length) {
+    <div class="grid grid-cards">
+      @for (t of s.data; track t.testimonialId) {
+        <figure class="card glass">
+          <mat-icon class="quote">format_quote</mat-icon>
+          @if (t.rating) {
+            <div class="stars">
+              @for (i of stars(t.rating); track i) { <mat-icon>star</mat-icon> }
+            </div>
+          }
+          <blockquote>{{ t.content }}</blockquote>
+          <figcaption>
+            <span class="name">{{ t.authorName }}</span>
+            <span class="role">
+              {{ t.authorTitle }}@if (t.authorTitle && t.authorCompany) {, }{{ t.authorCompany }}
+              @if (t.relationship) { <em>· {{ t.relationship }}</em> }
+            </span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  } @else {
+    <div class="state"><mat-icon>reviews</mat-icon><span>No testimonials yet — be the first below.</span></div>
+  }
+
+  <div class="submit glass">
+    <h2>Leave a testimonial</h2>
+    <p class="hint">Submissions are reviewed before they appear publicly.</p>
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Your name</mat-label>
+          <input matInput formControlName="authorName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email (optional)</mat-label>
+          <input matInput type="email" formControlName="authorEmail" />
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Title / role</mat-label>
+          <input matInput formControlName="authorTitle" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Company</mat-label>
+          <input matInput formControlName="authorCompany" />
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Relationship</mat-label>
+          <mat-select formControlName="relationship">
+            @for (r of relationships; track r) { <mat-option [value]="r">{{ r }}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Rating</mat-label>
+          <mat-select formControlName="rating">
+            @for (n of [5,4,3,2,1]; track n) { <mat-option [value]="n">{{ n }} / 5</mat-option> }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Your testimonial</mat-label>
+        <textarea matInput rows="5" formControlName="content"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>LinkedIn URL (optional)</mat-label>
+        <input matInput formControlName="linkedInUrl" />
+      </mat-form-field>
+
+      <button mat-flat-button class="cta" type="submit" [disabled]="submitting()">
+        @if (submitting()) { <mat-spinner diameter="18" /> } @else { <mat-icon>send</mat-icon> }
+        Submit testimonial
+      </button>
+    </form>
+  </div>
+</section>

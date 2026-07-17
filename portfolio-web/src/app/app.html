@@ -1,0 +1,72 @@
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header class="app-header">
+  <mat-toolbar class="toolbar">
+    <a class="brand" routerLink="/" (click)="closeMenu()">
+      <span class="brand-mark">{{ site.owner.charAt(0) }}</span>
+      <span class="brand-name">{{ site.owner }}</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary">
+      @for (link of links; track link.path) {
+        <a
+          class="nav-link"
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          >{{ link.label }}</a
+        >
+      }
+    </nav>
+
+    <button
+      mat-icon-button
+      class="menu-btn"
+      type="button"
+      [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  @if (menuOpen()) {
+    <nav class="mobile-nav" aria-label="Primary mobile">
+      @for (link of links; track link.path) {
+        <a
+          class="mobile-link"
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          (click)="closeMenu()"
+          >{{ link.label }}</a
+        >
+      }
+    </nav>
+  }
+</header>
+
+<main class="app-main" id="main-content" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer class="app-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">{{ site.owner }}</div>
+      <div class="footer-role">{{ site.role }} · {{ site.location }}</div>
+    </div>
+    <div class="footer-socials">
+      @for (social of site.socials; track social.label) {
+        <a [href]="social.url" target="_blank" rel="noopener" [attr.aria-label]="social.label">
+          <mat-icon>{{ social.icon }}</mat-icon>
+        </a>
+      }
+      <a [href]="'mailto:' + site.email" aria-label="Email">
+        <mat-icon>mail</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div class="footer-copy">© {{ year }} {{ site.owner }}. Built with Angular & Angular Material.</div>
+</footer>

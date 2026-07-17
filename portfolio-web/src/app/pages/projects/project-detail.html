@@ -1,0 +1,53 @@
+<section class="page">
+  <a class="back" routerLink="/projects"><mat-icon>arrow_back</mat-icon> Back to projects</a>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading project…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (s.data) {
+    <header class="detail-head">
+      <span class="ctx">{{ context(s.data) }}</span>
+      <h1>{{ s.data.projectName }}</h1>
+      <p class="range"><mat-icon>calendar_today</mat-icon>{{ dateRange(s.data.startDate, s.data.endDate) }}</p>
+    </header>
+
+    @if (s.data.projectSummary) {
+      <div class="block glass">
+        <h2>Overview</h2>
+        <p class="summary">{{ s.data.projectSummary }}</p>
+      </div>
+    }
+
+    @if (s.data.technologies.length) {
+      <div class="block">
+        <h2>Technology stack</h2>
+        <div class="tags">
+          @for (t of s.data.technologies; track t.technologyName) {
+            <span class="tag">{{ t.technologyName }}</span>
+          }
+        </div>
+      </div>
+    }
+
+    @if (s.data.details.length) {
+      <div class="block">
+        <h2>Highlights</h2>
+        <ul class="highlights">
+          @for (d of s.data.details; track d.projectDetailName) {
+            <li><mat-icon>check_circle</mat-icon><span>{{ d.projectDetailName }}</span></li>
+          }
+        </ul>
+      </div>
+    }
+
+    <div class="cta">
+      <a mat-flat-button class="cta-primary" routerLink="/contact">
+        <mat-icon>mail</mat-icon> Discuss this project
+      </a>
+    </div>
+  } @else {
+    <div class="state"><mat-icon>folder_off</mat-icon><span>Project not found.</span></div>
+  }
+</section>

@@ -1,0 +1,64 @@
+<section class="page">
+  <h1 class="page-title">Skills</h1>
+  <p class="page-subtitle">Technical proficiency across backend, frontend, data and tooling.</p>
+
+  @let s = state();
+  @if (s.status === 'loading') {
+    <div class="state"><mat-spinner diameter="44" /><span>Loading…</span></div>
+  } @else if (s.status === 'error') {
+    <div class="state"><mat-icon>error_outline</mat-icon><span>{{ s.error }}</span></div>
+  } @else if (skills().length) {
+
+    @if (radar(); as r) {
+      <div class="viz-card glass">
+        <h2>Proficiency radar</h2>
+        <svg [attr.viewBox]="'0 0 ' + r.size + ' ' + r.size" class="radar" role="img"
+             aria-label="Radar chart of skill areas">
+          @for (ring of r.rings; track ring) {
+            <circle [attr.cx]="r.cx" [attr.cy]="r.cy" [attr.r]="ring" class="ring" />
+          }
+          @for (a of r.axes; track a.label) {
+            <line [attr.x1]="r.cx" [attr.y1]="r.cy" [attr.x2]="a.ax" [attr.y2]="a.ay" class="axis" />
+          }
+          <polygon [attr.points]="r.polygon" class="poly" />
+          @for (a of r.axes; track a.label) {
+            <circle [attr.cx]="a.px" [attr.cy]="a.py" r="4" class="pt" />
+            <text [attr.x]="a.lx" [attr.y]="a.ly" [attr.text-anchor]="a.anchor" class="lbl">{{ a.label }}</text>
+          }
+        </svg>
+      </div>
+    }
+
+    <h2 class="viz-title">Skill matrix</h2>
+    <div class="matrix">
+      @for (skill of skills(); track skill.skillId) {
+        <div class="row glass">
+          <div class="row-head">
+            <span class="row-name">{{ skill.skillName }}</span>
+            <span class="row-count">{{ weight(skill) }}</span>
+          </div>
+          <div class="bar"><span class="bar-fill" [style.width.%]="barPct(skill)"></span></div>
+          @if (skill.details.length) {
+            <div class="tags">
+              @for (d of skill.details; track d.skillDetailName) {
+                <span class="tag">{{ d.skillDetailName }}</span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (cloud().length) {
+      <h2 class="viz-title">Technology cloud</h2>
+      <div class="cloud glass">
+        @for (item of cloud(); track $index) {
+          <span class="cloud-tag" [class]="sizeClass(item.weight)">{{ item.name }}</span>
+        }
+      </div>
+    }
+
+  } @else {
+    <div class="state"><mat-icon>psychology_alt</mat-icon><span>No skills listed yet.</span></div>
+  }
+</section>
